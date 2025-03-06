@@ -1,7 +1,8 @@
 'use client'
-import { productsDummyData, userDummyData } from "@/assets/assets";
-import { useUser } from "@clerk/nextjs";
+import { toast } from 'react-hot-toast'; // Importing toast
+import { productsDummyData, userDummyData } from '@/assets/assets.js'; // Corrected import path
 
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -18,10 +19,9 @@ export const AppContextProvider = (props) => {
 
     const { user } = useUser();
 
-
     const [products, setProducts] = useState([])
     const [userData, setUserData] = useState(false)
-    const [isSeller, setIsSeller] = useState(true)
+    const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
 
     const fetchProductData = async () => {
@@ -33,7 +33,6 @@ export const AppContextProvider = (props) => {
     }
 
     const addToCart = async (itemId) => {
-
         let cartData = structuredClone(cartItems);
         if (cartData[itemId]) {
             cartData[itemId] += 1;
@@ -42,11 +41,11 @@ export const AppContextProvider = (props) => {
             cartData[itemId] = 1;
         }
         setCartItems(cartData);
-
+        toast.success('Item added to cart') // Using toast to show success message
+        
     }
 
     const updateCartQuantity = async (itemId, quantity) => {
-
         let cartData = structuredClone(cartItems);
         if (quantity === 0) {
             delete cartData[itemId];
@@ -54,7 +53,7 @@ export const AppContextProvider = (props) => {
             cartData[itemId] = quantity;
         }
         setCartItems(cartData)
-
+        
     }
 
     const getCartCount = () => {
